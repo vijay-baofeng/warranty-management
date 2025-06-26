@@ -85,7 +85,7 @@ export function SerialForm({ isOpen, onClose, onSubmit, editingSerial, products 
   }, [editingSerial, isOpen]);
 
   const selectedProduct = products.find(p => p.id === formData.product_id);
-  const productId = selectedProduct ? `${selectedProduct.serial_no_prefix}001` : "No Product Selected";
+  const productId = selectedProduct ? `${selectedProduct.id}` : "No Product Selected";
 
   const parseCSV = (csvText: string): CSVRow[] => {
     const lines = csvText.trim().split('\n');
@@ -293,7 +293,7 @@ export function SerialForm({ isOpen, onClose, onSubmit, editingSerial, products 
               <div className="p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-2 text-sm">
                   <span className="font-medium text-gray-700">Product ID:</span>
-                  <span className="text-green-600">{selectedProduct ? `${selectedProduct.serial_no_prefix}001` : "No Product Selected"}</span>
+                  <span className="text-green-600">{selectedProduct ? `${selectedProduct.id}` : "No Product Selected"}</span>
                 </div>
               </div>
             )}

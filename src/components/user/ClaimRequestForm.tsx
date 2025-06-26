@@ -109,11 +109,11 @@ export function ClaimRequestForm({ onSubmit, onBack, isLoading, serialNumber }: 
           />
         </div>
         
-        <ClaimFormDatePicker
+        {/* <ClaimFormDatePicker
           control={form.control}
           name="expected_resolution_date"
           label="Expected Resolution Date (Optional)"
-        />
+        /> */}
 
         <FormField
           control={form.control}
