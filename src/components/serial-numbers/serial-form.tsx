@@ -157,12 +157,12 @@ export function SerialForm({ isOpen, onClose, onSubmit, editingSerial, products 
     try {
       // Validate that all productIds exist in the products list
       const validProductIds = products.map(p => p.id);
-      const invalidRows = csvData.filter(row => !validProductIds.includes(row.productId));
+      const validRows = csvData.filter(row => validProductIds.includes(row.productId));
       
-      if (invalidRows.length > 0) {
+      if (validRows.length === 0) {
         toast({
           title: "Invalid Product IDs",
-          description: `Found ${invalidRows.length} rows with invalid product IDs. Please check your CSV file.`,
+          description: `Found ${validRows.length} rows with invalid product IDs. Please check your CSV file.`,
           variant: "destructive",
         });
         setIsProcessing(false);
