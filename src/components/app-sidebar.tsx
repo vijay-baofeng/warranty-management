@@ -28,6 +28,11 @@ const menuItems = [
     key: "dashboard",
   },
   {
+    title: "Registered Warranties",
+    icon: LayoutDashboard,
+    key: "registered-warranties",
+  },
+  {
     title: "Claims",
     icon: FileText,
     key: "claims",

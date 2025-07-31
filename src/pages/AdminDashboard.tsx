@@ -11,6 +11,7 @@ import { SettingsManager } from "@/components/settings-manager";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useAuth } from "@/providers/AuthProvider";
+import { RegisteredWarrantiesManager } from "@/components/registered-warranties-manager";
 
 export default function AdminDashboard() {
   const location = useLocation();
@@ -43,6 +44,7 @@ export default function AdminDashboard() {
             <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
               <Routes>
                 <Route index element={<DashboardOverview />} />
+                <Route path="registered-warranties" element={<RegisteredWarrantiesManager />} />
                 <Route path="claims" element={<ClaimsManager />} />
                 <Route path="brands" element={<BrandsManager />} />
                 <Route path="categories" element={<CategoriesManager />} />

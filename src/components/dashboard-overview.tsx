@@ -4,10 +4,14 @@ import { FileText, Clock, CheckCircle, XCircle } from "lucide-react";
 import { useClaimRequests } from "@/hooks/useClaimRequests";
 import { useSerialNumbers } from "@/hooks/useSerialNumbers";
 import { format } from "date-fns";
+import { useUserWarranties } from "@/hooks/useUserWarranties";
 
 export function DashboardOverview() {
   const { claimRequests, loading: claimsLoading } = useClaimRequests();
   const { serialNumbers, loading: serialsLoading } = useSerialNumbers();
+  const { allRegisteredWarranties, loading: warrantyLoading } = useUserWarranties();
+
+  console.log('allRegisteredWarranties-----', allRegisteredWarranties);
 
   // Calculate statistics from real data
   const totalClaims = claimRequests.length;

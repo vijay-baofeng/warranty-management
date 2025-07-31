@@ -49,9 +49,52 @@ const mapSupabaseDataToSerialNumber = (data: any): SerialNumber => {
 
 export function useUserWarranties() {
   const [userWarranties, setUserWarranties] = useState<SerialNumber[]>([]);
+  const [allRegisteredWarranties, setAllRegisteredWarranties] = useState<SerialNumber[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
+
+  const fetchAllRegisteredWarrnties = useCallback(async () => {
+    if (!user) {
+      console.log('No user found, clearing user warranties');
+      setAllRegisteredWarranties([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      console.log('Fetching user warranties for user:', user.id);
+      
+      // Fetch serial numbers that belong to the current user
+      // RLS policies will automatically filter to show only user's own warranties
+      const { data, error } = await supabase
+        .from('serial_numbers')
+        .select(USER_SERIAL_NUMBER_SELECT_QUERY)
+        // .eq('user_id', user.id)
+        .in('status', ['registered'])
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching user warranties:', error);
+        throw error;
+      }
+      
+      const warranties = (data || []).map(mapSupabaseDataToSerialNumber);
+      console.log('Successfully fetched user warranties:', warranties.length);
+      setAllRegisteredWarranties(warranties);
+    } catch (error) {
+      console.error('Error fetching user warranties:', error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch your warranties",
+        variant: "destructive",
+      });
+      setAllRegisteredWarranties([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [toast, user]);
 
   const fetchUserWarranties = useCallback(async () => {
     if (!user) {
@@ -100,22 +143,27 @@ export function useUserWarranties() {
       console.log('Auth loading, waiting...');
       setLoading(true);
       setUserWarranties([]);
+      setAllRegisteredWarranties([]);
       return;
     }
 
     if (user) {
       console.log('User authenticated, fetching warranties for user:', user.id);
       fetchUserWarranties();
+      fetchAllRegisteredWarrnties();
     } else {
       console.log('No user, clearing warranties');
       setUserWarranties([]);
+      setAllRegisteredWarranties([]);
       setLoading(false);
     }
-  }, [user, authLoading, fetchUserWarranties]);
+  }, [user, authLoading, fetchUserWarranties, fetchAllRegisteredWarrnties]);
 
   return {
     userWarranties,
+    allRegisteredWarranties,
     loading,
     refreshUserWarranties: fetchUserWarranties,
+    refreshAllRegisteredWarranties: fetchAllRegisteredWarrnties,
   };
 }
