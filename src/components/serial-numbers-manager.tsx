@@ -37,7 +37,7 @@ export function SerialNumbersManager() {
   const itemsPerPage = 10;
 
   // Check if user is admin
-  if (role !== 'admin') {
+  if (role === 'end_user') {
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <div className="text-center space-y-4">
