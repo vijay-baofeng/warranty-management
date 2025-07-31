@@ -18,7 +18,7 @@ export function useSerialNumbers() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { user, role, loading: authLoading } = useAuth();
-
+console.log('user-----', user);
   const fetchSerialNumbers = useCallback(async () => {
     // Only admins can fetch serial numbers for management
     if (!user) {
@@ -28,7 +28,7 @@ export function useSerialNumbers() {
       return;
     }
 
-    if (role !== 'admin') {
+    if (role === 'end_user') {
       console.log('User is not admin, cannot fetch serial numbers for management');
       setSerialNumbers([]);
       setLoading(false);
@@ -78,7 +78,7 @@ export function useSerialNumbers() {
 
   // Admin only - create serial number
   const createSerialNumber = useCallback(async (serialData: CreateSerialNumberPayload) => {
-    if (role !== 'admin') {
+    if (role === 'end_user') {
       toast({
         title: "Access Denied",
         description: "Only administrators can create serial numbers",
@@ -109,7 +109,7 @@ export function useSerialNumbers() {
 
   // Admin only - update serial number
   const updateSerialNumber = useCallback(async (id: string, serialData: UpdateSerialNumberPayload) => {
-    if (role !== 'admin') {
+    if (role === 'end_user') {
       toast({
         title: "Access Denied",
         description: "Only administrators can update serial numbers",
@@ -140,7 +140,7 @@ export function useSerialNumbers() {
 
   // Admin only - delete serial number
   const deleteSerialNumber = useCallback(async (id: string) => {
-    if (role !== 'admin') {
+    if (role === 'end_user') {
       toast({
         title: "Access Denied",
         description: "Only administrators can delete serial numbers",
@@ -225,7 +225,7 @@ export function useSerialNumbers() {
       });
       
       // Update local state if this is admin view
-      if (role === 'admin') {
+      if (role === 'admin' || role === 'super_admin') {
         setSerialNumbers(prev => prev.map(serial => 
           serial.id === serialNumberId 
             ? { ...serial, status: 'claimed', claim_request_id: newClaimRequest.id }
@@ -259,7 +259,7 @@ export function useSerialNumbers() {
       return;
     }
 
-    if (user && role === 'admin') {
+    if (user && (role === 'admin' || role === 'super_admin')) {
       console.log('Admin user authenticated, fetching serial numbers for user:', user.id);
       fetchSerialNumbers();
     } else {
