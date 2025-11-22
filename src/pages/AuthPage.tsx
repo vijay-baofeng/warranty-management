@@ -119,6 +119,13 @@ export default function AuthPage() {
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Send OTP
               </Button>
+              <Button
+                type="button"
+                className="w-full"
+                onClick={() => navigate("/serial-lookup")}
+              >
+                Lookup Serial No.
+              </Button>
             </form>
           ) : (
             <form onSubmit={handleVerifyOtp} className="space-y-4">

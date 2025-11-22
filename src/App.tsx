@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./providers/AuthProvider";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { RoleBasedDashboard } from "./components/RoleBasedDashboard";
+import SerialLookup from "./components/serial-number-lookup";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/login" element={<AuthPage />} />
+            <Route path="/serial-lookup" element={<SerialLookup />} />
             <Route
               path="/dashboard/*"
               element={
