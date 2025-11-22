@@ -2,6 +2,7 @@ import { SUPABASE_PUBLISHABLE_KEY } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
+import { formatSafe } from "@/utils";
 
 function SerialLookup() {
   const [serial, setSerial] = useState("");
@@ -246,7 +247,7 @@ function SerialLookup() {
                             </a>
                           </div>
                         ) : (
-                          String(value)
+                          String(formatSafe(value))
                         )}
                       </td>
                     </tr>
@@ -322,7 +323,7 @@ function SerialLookup() {
                         color: "#374151",
                       }}
                     >
-                      {String(result[key])}
+                      {String(formatSafe(result[key]))}
                     </td>
                   </tr>
                 ))}
