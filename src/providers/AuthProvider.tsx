@@ -54,84 +54,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // useEffect(() => {
-  //   // Get initial session
-  //   supabase.auth.getSession().then(({ data: { session } }) => {
-  //     setSession(session);
-  //     setUser(session?.user ?? null);
-
-  //     if (session?.user) {
-  //       fetchUserRole(session.user.id).then((userRole) => {
-  //         setRole(userRole);
-  //         setLoading(false);
-  //       });
-  //     } else {
-  //       setRole(null);
-  //       setLoading(false);
-  //     }
-  //   });
-
-  //   // Listen for auth changes
-  //   const {
-  //     data: { subscription },
-  //   } = supabase.auth.onAuthStateChange((_event, session) => {
-  //     setSession(session);
-  //     setUser(session?.user ?? null);
-
-  //     if (session?.user) {
-  //       fetchUserRole(session.user.id).then((userRole) => {
-  //         setRole(userRole);
-  //       });
-  //     } else {
-  //       setRole(null);
-  //     }
-  //   });
-
-  //   return () => subscription.unsubscribe();
-  // }, []);
-
   useEffect(() => {
-    let ignore = false;
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
 
-    async function init() {
-      const { data } = await supabase.auth.getSession();
-      const currentSession = data.session;
-
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
-
-      if (currentSession?.user) {
-        const userRole = await fetchUserRole(currentSession.user.id);
-        if (!ignore) {
+      if (session?.user) {
+        fetchUserRole(session.user.id).then((userRole) => {
           setRole(userRole);
-        }
+          setLoading(false);
+        });
+      } else {
+        setRole(null);
+        setLoading(false);
+      }
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+
+      if (session?.user) {
+        fetchUserRole(session.user.id).then((userRole) => {
+          setRole(userRole);
+        });
       } else {
         setRole(null);
       }
+    });
 
-      if (!ignore) setLoading(false);
-    }
-
-    init();
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-
-        if (session?.user) {
-          const userRole = await fetchUserRole(session.user.id);
-          setRole(userRole);
-        } else {
-          setRole(null);
-        }
-      }
-    );
-
-    return () => {
-      ignore = true;
-      listener.subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
   const value = { user, session, role, loading };
